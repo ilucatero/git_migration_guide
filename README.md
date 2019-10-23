@@ -2,31 +2,29 @@
 
 * Basé sur le tutoriel de migration d'attlasian ici https://www.atlassian.com/git/tutorials/migrating-prepare
 
+
 ### Préparer la migration
 
-![alt text](https://gitforwindows.org/img/git_logo.png "Git Bash")
-
-
-* Via Git Bash, télécharger l'outil de migration svn  to git : https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar
-```bash
-mkdir -p ~/DEV/svn_git_migration
-cd ~/DEV/svn_git_migration
-curl -s -H "Accept: application/zip" https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar -o svn-migration-scripts.jar
-```
+* Via Git Bash <img align="center" width="50" height="50" src="https://msysgit.github.io/img/gwindows_logo.png">, télécharger l'outil de migration svn  to git : https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar
+   ```bash
+   mkdir -p ~/DEV/svn_git_migration
+   cd ~/DEV/svn_git_migration
+   curl -s -H "Accept: application/zip" https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar -o        svn-migration-scripts.jar
+   ```
 
 * Vérifier que tous les outils git & svn sont pressentes : 
-```bash
-java -jar svn-migration-scripts.jar verify
-```
+   ```bash
+   java -jar svn-migration-scripts.jar verify
+   ```
 
 * Importer les utilisateurs SVN en format git
-```bash
-java -jar svn-migration-scripts.jar authors http://svn.mycompany.com/REPOS/REPO1 > authors_REPO1.txt
-```
+   ```bash
+   java -jar svn-migration-scripts.jar authors http://svn.mycompany.com/REPOS/REPO1 > authors_REPO1.txt
+   ```
    et puis remplacer dans le fichier tous les entrés avec '@xxx.com' par '@mycompany.com'
-```bash
-sed -i 's/@xxx.com/@mycompany.com/g' authors_REPO1.txt
-```
+   ```bash
+   sed -i 's/@xxx.com/@mycompany.com/g' authors_REPO1.txt
+   ```
 
 ### Recouper le projet SVN
 
@@ -47,66 +45,64 @@ cd test-mock
 
 * Création des vrais branches & tags GIT :
 
-**/!\ Atttention**
-
-**Ce conversion est définitive sur le projet en local, le "backuper"  pour éviter de refaire l’opération svn-à-git qui est suivant très lente !**
-```bash
-cp -r test-mock test-mock.bck
-# Follow this exact order
-git for-each-ref refs/remotes/origin/tags | cut -d / -f 5- | grep -v @ | while read tagname; do git tag "$tagname" "origin/tags/$tagname"; git branch -r -d "origin/tags/$tagname"; done
-git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep -v @ | while read branchname; do git branch "$branchname" "refs/remotes/origin/$branchname"; git branch -r -d "origin/$branchname"; done
-```
+   > **/!\ Attention: Ce conversion est définitive sur le projet en local, le "backuper"  pour éviter de refaire l’opération svn-à-git qui est suivant très lente !**
+   ```bash
+   cp -r test-mock test-mock.bck
+   # Follow this exact order
+   git for-each-ref refs/remotes/origin/tags | cut -d / -f 5- | grep -v @ | while read tagname; do git tag "$tagname"    "origin/tags/$tagname"; git branch -r -d "origin/tags/$tagname"; done
+   git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep -v @ | while read branchname; do git branch "$branchname" "refs/remotes/origin/$branchname"; git branch -r -d "origin/$branchname"; done
+   ```
 
 * Suppression de la branche trunk qui fait doublon avec master
-```bash
-git branch -d trunk
-```
+   ```bash
+   git branch -d trunk
+   ```
 
 * Suppression des branches & tags  résiduels
-```bash
-git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep '@' | while read branchname; do git branch -r -d "origin/$branchname"; done
-```
+   ```bash
+   git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep '@' | while read branchname; do git branch -r -d "origin/$branchname"; done
+   ```
 
 ### Créer et lier le projet au dépôt distant
 
 * Sur GitLab, créer le projet en amont  dans le groupe souhaité. Dans l'exemple suivant on le crée dans le groupe "test-mock".
 
    Apres l'avoir crée une liste de commandes sera affiché, récupère une ligne comme la suivant et l’exécuter sur ton Git Bash pour le lier au dépôt sur Gitlab  remote : dans ce cas les répertories (Groups) /repo1/test-mock/ doivent exister.
-```bash
-git remote add origin git@gitlab.mycompany.com/REPOS/REPO1/test-mock.git
-```
+   ```bash
+   git remote add origin git@gitlab.mycompany.com/REPOS/REPO1/test-mock.git
+   ```
 
 * Vérification que les branches et tags ont été créés correctement
-```bash
-git branch -a
-git tag -l
-```
+   ```bash
+   git branch -a
+   git tag -l
+   ```
 
 * Vérification que le HEAD pointe vers une seul branche
-```bash
-git log -5
-# Doit afficher quelque chose comme : 
-#         * 5ffcb7f - (19 hours ago) & move to trunk - ... (HEAD -> master)
-```
+   ```bash
+   git log -5
+      # Doit afficher quelque chose comme : 
+      #         * 5ffcb7f - (19 hours ago) & move to trunk - ... (HEAD -> master)
+   ```
 
 * Stockage du code migré sur le dépôt GIT distant
-```bash
-git push -u origin --all
-git push -u origin --tags
-```
+   ```bash
+   git push -u origin --all
+   git push -u origin --tags
+   ```
 
 ### Étapes post-migration du code
 
 * Créer le fichier .gitignore (version minimale ci-dessous) à la racine du projet avec la commande suivant
-```bash
-echo -e ".project\n.classpath\n.checkstyle\n.settings\n.idea\ntarget\n" >> .gitignore
-```
+   ```bash
+   echo -e ".project\n.classpath\n.checkstyle\n.settings\n.idea\ntarget\n" >> .gitignore
+   ```
    et le rajouter / versioner
-```bash
-git add .gitignore -f
-git ci -m "& add .gitignore"
-git push
-```
+   ```bash
+   git add .gitignore -f
+   git ci -m "& add .gitignore"
+   git push
+   ```
 
 * Créer les clés Jenkins sur git
 
@@ -118,12 +114,12 @@ git push
 
 
 * Mettre à jour le champ SCM du pom.xml du projet : 
-```xml
-<scm>
-    <connection>scm:git:https://gitlab.mycompany.com/REPOS/REPO1/test-mock.git</connection>
-</scm>
-```
+   ```xml
+   <scm>
+       <connection>scm:git:https://gitlab.mycompany.com/REPOS/REPO1/test-mock.git</connection>
+   </scm>
+   ```
    et pour le valider
-```bash
-mvn scm:checkout
-```
+   ```bash
+   mvn scm:checkout
+   ```
