@@ -123,3 +123,17 @@ cd test-mock
    ```bash
    mvn scm:checkout
    ```
+
+
+### Synchronize SVN repositories wisth git
+
+If you already got the svn repository, but in middle of the migration someone commit something, do next to update it: 
+   ```batch
+   # with one command
+   git svn rebase
+   
+   # or withoud applying changes
+   git svn fetch ; 
+   # then applying them
+   git svn rebase -l # or git svn rebase --local
+   ```
