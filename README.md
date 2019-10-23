@@ -1,32 +1,32 @@
 # Git Migration Guide
 
-* Basé sur le tutoriel de migration d'attlasian ici https://www.atlassian.com/git/tutorials/migrating-prepare
+* Based on attlasian's guide : https://www.atlassian.com/git/tutorials/migrating-prepare
 
 
-### Préparer la migration
+### Prepare the migration
 
-* Via Git Bash <img align="center" width="50" height="50" src="https://msysgit.github.io/img/gwindows_logo.png">, télécharger l'outil de migration svn  to git : https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar
+* Using Git Bash <img align="center" width="50" height="50" src="https://msysgit.github.io/img/gwindows_logo.png">, download the below util for svn to git migration : https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar
    ```bash
    mkdir -p ~/DEV/svn_git_migration
    cd ~/DEV/svn_git_migration
    curl -s -H "Accept: application/zip" https://bitbucket.org/atlassian/svn-migration-scripts/downloads/svn-migration-scripts.jar -o        svn-migration-scripts.jar
    ```
 
-* Vérifier que tous les outils git & svn sont pressentes : 
+* Verify that all git and svn libs are present: 
    ```bash
    java -jar svn-migration-scripts.jar verify
    ```
 
-* Importer les utilisateurs SVN en format git
+* Import all SVN users in git  format:
    ```bash
    java -jar svn-migration-scripts.jar authors http://svn.mycompany.com/REPOS/REPO1 > authors_REPO1.txt
    ```
-   et puis remplacer dans le fichier tous les entrés avec '@xxx.com' par '@mycompany.com'
+   and then replace in file all entries from '@xxx.com' to '@mycompany.com'
    ```bash
    sed -i 's/@xxx.com/@mycompany.com/g' authors_REPO1.txt
    ```
 
-### Recouper le projet SVN
+### Get the SVN projects
 
 
 * Récupération du code du SVN pour stockage sous la forme d'un dépôt GIT local avec liaison correct des noms de développeurs & Accès au dépôt GIT local créé.
