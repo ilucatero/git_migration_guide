@@ -20,10 +20,9 @@ java -jar svn-migration-scripts.jar verify
 
 Importer les utilisateurs SVN en format git
 ```bash
-java -jar svn-migration-scripts.jar authors http://svn.mycompany.com/EFM > authors_REPO1.txt
-et puis éditer le fichier avec une éditeur de texte et remplacer tous les entrés avec '@xxx.com' par '@mycompany.com'.
+java -jar svn-migration-scripts.jar authors http://svn.mycompany.com/REPOS/REPO1 > authors_REPO1.txt
 ```
-
+et puis éditer le fichier avec une éditeur de texte et remplacer tous les entrés avec '@xxx.com' par '@mycompany.com'.
 
 ### Recouper le projet SVN
 
@@ -64,13 +63,13 @@ git branch -d trunk
 Suppression des branches & tags  résiduels
 ```bash
 git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep '@' | while read branchname; do git branch -r -d "origin/$branchname"; done
-Créer et lier le projet au dépôt distant
 ```
+
+### Créer et lier le projet au dépôt distant
 
 Sur GitLab, créer le projet en amont  dans le groupe souhaité. Dans l'exemple suivant on le crée dans le groupe "test-mock".
 
-
-Apres l'avoir crée une liste de commandes sera affiché, récupère une ligne comme la suivant et l’exécuter sur ton Git Bash pour le lier au dépôt sur Gitlab  remote : dans ce cas les répertories (Groups) /rd/repo1/test-mock/ doivent exister.
+Apres l'avoir crée une liste de commandes sera affiché, récupère une ligne comme la suivant et l’exécuter sur ton Git Bash pour le lier au dépôt sur Gitlab  remote : dans ce cas les répertories (Groups) /repo1/test-mock/ doivent exister.
 ```bash
 git remote add origin git@gitlab.mycompany.com/REPOS/REPO1/test-mock.git
 ```
@@ -92,8 +91,9 @@ Stockage du code migré sur le dépôt GIT distant
 ```bash
 git push -u origin --all
 git push -u origin --tags
-Étapes post-migration du code
 ```
+
+### Étapes post-migration du code
 
 Créer le fichier .gitignore (version minimale ci-dessous) à la racine du projet avec la commande suivant
 ```bash
@@ -106,7 +106,7 @@ git ci -m "& add .gitignore"
 git push
 ```
 
-### Créer les clés Jenkins sur git
+Créer les clés Jenkins sur git
 
 Pour ce faire, il est nécessaire de suivre la procédure détaille sur Configurer un job sur jenkins avec des sources sur gitlab
 
