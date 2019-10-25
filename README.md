@@ -31,9 +31,9 @@ Based on attlasian's guide : https://www.atlassian.com/git/tutorials/migrating-p
 ### Get the SVN projects
 
 
-* Récupération du code du SVN pour stockage sous la forme d'un dépôt GIT local avec liaison correct des noms de développeurs & Accès au dépôt GIT local créé.
+* Retrieving the SVN code for storage as a local GIT repository with proper linking of developer names & local GIT repository access created.
 
-   Si le le layout de svn n'est pas standard (il n'a pas de sous répertoires tels que /trunk, /tags, /branches), utiliser une commande similaire à 
+   If the svn layout is not standard (it does not have subdirectories such as /trunk, /tags, /branches), use a command similar to 
 ```bash
 #git svn clone --authors-file=authors.txt --no-metadata <SVN_REPO>/<PROJECT_NAME> <OUTPUT_GIT_REPO_NAME> -T <DIR_TRUNK> -t <DIR_TAGS> -b <DIR_BRANCHES>
 git svn clone --authors-file=authors_REPO1.txt --no-metadata http://svn.mycompany.com/REPOS/REPO1/test-mock/ -T .
@@ -43,11 +43,11 @@ git svn clone --authors-file=authors_REPO1.txt --no-metadata -s stt-mock http://
 cd test-mock
 ```
 
-### Convertir Branches & Tags SVN en format Git
+### Convert Branches & Tags SVN to Git format
 
-* Création des vrais branches & tags GIT :
+* Creating real branches & GIT tags:
 
-   > **/!\ Attention: Ce conversion est définitive sur le projet en local, le "backuper"  pour éviter de refaire l’opération svn-à-git qui est suivant très lente !**
+   > **/!\ Warning: This conversion is definitive on the local project, backup it avoid redoing the svn-to-git operation which is very slow !**
    ```bash
    cp -r test-mock test-mock.bck
    # Follow this exact order
@@ -55,79 +55,79 @@ cd test-mock
    git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep -v @ | while read branchname; do git branch "$branchname" "refs/remotes/origin/$branchname"; git branch -r -d "origin/$branchname"; done
    ```
 
-* Suppression de la branche trunk qui fait doublon avec master
+* Deleting the /trunk branch that duplicates with master
    ```bash
    git branch -d trunk
    ```
 
-* Suppression des branches & tags  résiduels
+* Remove residual branches & tags
    ```bash
    git for-each-ref refs/remotes/origin | cut -d / -f 4- | grep '@' | while read branchname; do git branch -r -d "origin/$branchname"; done
    ```
 
-### Créer et lier le projet au dépôt distant
+### Create and bind the project to the remote repository
 
-* Sur GitLab, créer le projet en amont  dans le groupe souhaité. Dans l'exemple suivant on le crée dans le groupe "test-mock".
+* On GitLab, create first the project in the desired group. In the following example it is created in the "test-mock" group.
 
-   Apres l'avoir crée une liste de commandes sera affiché, récupère une ligne comme la suivant et l’exécuter sur ton Git Bash pour le lier au dépôt sur Gitlab  remote : dans ce cas les répertories (Groups) /repo1/test-mock/ doivent exister.
+   After creating it, a list of commands will be displayed. Get a line like the following one and run it on your Git Bash to bind it to the repository on Gitlab remote: in this case the directories (Groups) /repo1/test-mock/ must exist.
    ```bash
    git remote add origin git@gitlab.mycompany.com/REPOS/REPO1/test-mock.git
    ```
 
-* Vérification que les branches et tags ont été créés correctement
+* Verifying that branches and tags have been created correctly
    ```bash
    git branch -a
    git tag -l
    ```
 
-* Vérification que le HEAD pointe vers une seul branche
+* Verification that the HEAD points to a single branch
    ```bash
    git log -5
-      # Doit afficher quelque chose comme : 
+      # Must display something like:
       #         * 5ffcb7f - (19 hours ago) & move to trunk - ... (HEAD -> master)
    ```
 
-* Stockage du code migré sur le dépôt GIT distant
+* Storing migrated code on remote GIT repository
    ```bash
    git push -u origin --all
    git push -u origin --tags
    ```
 
-### Étapes post-migration du code
+### Post-migration steps of the code
 
-* Créer le fichier .gitignore (version minimale ci-dessous) à la racine du projet avec la commande suivant
+* Create the .gitignore file (minimum version below) at the root of the project with the following command
    ```bash
    echo -e ".project\n.classpath\n.checkstyle\n.settings\n.idea\ntarget\n" >> .gitignore
    ```
-   et le rajouter / versioner
+   and add it
    ```bash
    git add .gitignore -f
    git ci -m "& add .gitignore"
    git push
    ```
 
-* Créer les clés Jenkins sur git
+* Create Keys Jenkins on git
 
-   Pour ce faire, il est nécessaire de suivre la procédure détaille sur Configurer un job sur jenkins avec des sources sur gitlab
+   To do this, it is necessary to follow the detailed procedure on Configuring a Job on jenkins with sources on gitlab
 
-   Ajouter une clé sur le projet gitlab dans les settings du projet aller vers l'item repository, par exemple ici :
+   Add a key on the project gitlab in the project settings go to the item repository, for example here:
    > https://gitlab.mycompany.com/REPOS/REPO1/test-mock/settings/repository
-   étendre l’élément Deploy keys et activer les clés et puis valider que le projet est  correctement construit depuis jenkins
+   extend the Deploy Keys element and activate the keys and then validate that the project is correctly built since Jenkins
 
 
-* Mettre à jour le champ SCM du pom.xml du projet : 
+* Update the SCM field of the project pom.xml:
    ```xml
    <scm>
        <connection>scm:git:https://gitlab.mycompany.com/REPOS/REPO1/test-mock.git</connection>
    </scm>
    ```
-   et pour le valider
+   and to validate it
    ```bash
    mvn scm:checkout
    ```
 
 
-### Synchronize SVN repositories wisth git
+### Synchronize SVN repositories with git
 
 If you already got the svn repository, but in middle of the migration someone commit something, do next to update it: 
    ```batch
