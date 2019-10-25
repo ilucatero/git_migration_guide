@@ -177,7 +177,7 @@ Add global gitignore config:
    notepad .gitignore_global
    ```
    and add the next block
-   ```bash
+   ```
    .gitignore
     
    # OS junk files
@@ -276,6 +276,8 @@ As part of a client-side Git-Enforced-Policy, to be able to block commits withou
   edit the file with VIM (OR NOTEPAD IF WINDOWS), adding the following script:
   ```
   vim  ~/.git-templates/hooks/commit-msg
+  ```
+  ```bash
   #!/usr/bin/env bash
  
   #-------- check is DEV branch (TO REACTIVATE WHEN READY) ---------------
