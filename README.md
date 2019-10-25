@@ -1,6 +1,8 @@
+Before running any migration from SVN to GIT, follow the [git installation guide](GIT_INSTALLATION_GUIDE.md).
+
 # Git Migration Guide
 
-* Based on attlasian's guide : https://www.atlassian.com/git/tutorials/migrating-prepare
+Based on attlasian's guide : https://www.atlassian.com/git/tutorials/migrating-prepare
 
 
 ### Prepare the migration
