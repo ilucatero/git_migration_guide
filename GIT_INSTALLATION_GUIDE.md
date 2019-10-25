@@ -232,9 +232,9 @@ With the help of Git Bash or terminal, create an SSH key on your computer (if yo
    ```
 
    * choose all default options (ie enter, enter, enter all questions without writing anything)
-   * DO NOT ENTER PASSPHRASE if it asks you
-   * With the key in the clipboard, access the configuration of your profile in the server GitLab mycompany (User Settings> SSH Key)
-   * Add this SSH key in the configuration of your profile
+   * DO NOT ENTER PASSPHRASE if it asks you
+   * With the key in the clipboard, access the configuration of your profile in the server GitLab mycompany (User Settings> SSH Key)
+   * Add this SSH key in the configuration of your profile
    * Tester l'accès depuis votre poste :
      * la connexion ssh 
      ```bash
@@ -266,13 +266,12 @@ Add a message template for the default commit:
   ```
   
 As part of a client-side Git-Enforced-Policy, to be able to block commits without messages for example, you have to add a hook script (Hook) with the specific name "commit-msg". To do this you must:
-
- create the hook file with execute rights: 
+  * create the hook file with execute rights: 
   ```bash
   touch ~/.git-templates/hooks/commit-msg
   chmod a+x ~/.git-templates/hooks/commit-msg
   ```
-  edit the file with VIM (OR NOTEPAD IF WINDOWS), adding the following script:
+  * edit the file with VIM (OR NOTEPAD IF WINDOWS), adding the following script:
   ```
   vim  ~/.git-templates/hooks/commit-msg
   ```
