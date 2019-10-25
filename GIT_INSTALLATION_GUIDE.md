@@ -20,11 +20,11 @@ sudo apt install -y git
 
 Also install the file comparison tools, it will be necessary later during the configuration:
 
-### Win10
+#### Win10
 
 Download the KDiff3 installer from their site `http://kdiff3.sourceforge.net/` & install it with ALL default choices.
 
-### Ubuntu
+#### Ubuntu
 
 Install KDiff3 from the command line (with its dependencies requested)
 ```bash
@@ -35,13 +35,13 @@ sudo apt-get install kdiff3
 > * Other comparison tools such as Meld are available, but here only KDiff3 is considered.
 > In case you prefer to install another, consider adapting the configuration described below.
 
-## configure
+## Configure
  
 To configure it globally (for all projects in the workstation), you must open a command line terminal.
 
 > On win10 the following configuration steps are done on the Git Bash command line (not the same as CMD) previously installed.
  
-### Config global
+#### Config global
  
 Add user & mail configuration:
 ```bash
@@ -216,35 +216,35 @@ Add global gitignore config:
    __pycache__
    ```
 
-### Add SSH key (always use)
+#### Add SSH key (always use)
 
 Another important element to install is the SSH key. This is required when you want to use an SSH git repository, so it will be required to establish secure communication with the GitLab server.
 
 To create and install:
 
 With the help of Git Bash or terminal, create an SSH key on your computer (if you need more details about the procedure see: gitlab_doc or else_git-ssh_doc):
-```bash
-# generate an RSA key
-ssh-keygen -o -t rsa -b 2048 -C <MON_USER>@mycompany.com -N ""
- 
-# copy the ssh key to the clipboard
-cat ~/.ssh/id_rsa.pub | clip
-```
+   ```bash
+   # generate an RSA key
+   ssh-keygen -o -t rsa -b 2048 -C <MON_USER>@mycompany.com -N ""
+    
+   # copy the ssh key to the clipboard
+   cat ~/.ssh/id_rsa.pub | clip
+   ```
 
- * choose all default options (ie enter, enter, enter all questions without writing anything)
- * DO NOT ENTER PASSPHRASE if it asks you
- * With the key in the clipboard, access the configuration of your profile in the server GitLab mycompany (User Settings> SSH Key)
- * Add this SSH key in the configuration of your profile
- * Tester l'accès depuis votre poste :
-   * la connexion ssh 
-   ```bash
-   ssh -T git@gitlab.mycompany.com
-   # réponse attendu : "Welcome to GitLab, @<MON_USER>!"
-   ```
-   * or by cloning a project in SSH, for example:
-   ```bash
-   git clone git@gitlab.mycompany.com:rd/sandbox/wicket-tuto-project.git
-   ```
+   * choose all default options (ie enter, enter, enter all questions without writing anything)
+   * DO NOT ENTER PASSPHRASE if it asks you
+   * With the key in the clipboard, access the configuration of your profile in the server GitLab mycompany (User Settings> SSH Key)
+   * Add this SSH key in the configuration of your profile
+   * Tester l'accès depuis votre poste :
+     * la connexion ssh 
+     ```bash
+     ssh -T git@gitlab.mycompany.com
+     # réponse attendu : "Welcome to GitLab, @<MON_USER>!"
+     ```
+     * or by cloning a project in SSH, for example:
+     ```bash
+     git clone git@gitlab.mycompany.com:rd/sandbox/wicket-tuto-project.git
+     ```
 
 ## Hooks & Templates
 
@@ -258,7 +258,6 @@ git config --global init.templateDir '~/.git-templates'
 ```
 
 Add a message template for the default commit:
-
   * create and configure the default message
   ```bash
   touch ~/.git-templates/gitmessage.txt
